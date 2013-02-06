@@ -3,6 +3,7 @@ package main
 import (
   "net/http"
   "fmt"
+  "flag"
   "image/png"
   "github.com/qpliu/qrencode-go/qrencode"
 )
@@ -16,15 +17,16 @@ func qrcodeHandler(w http.ResponseWriter, r *http.Request) {
   w.Header().Add("Content-Type", "image/png")
   grid, err := qrencode.Encode( text , qrencode.ECLevelQ)
   if err != nil {
-    w.Write(err)
+    fmt.Fprintf(w,"QRCode error:%s",err)
     return
   }
   png.Encode(w, grid.Image(8))
 }
 
 func main() {
-  var port string = "8080"
-  fmt.Printf("Starting qrcode server at http://0.0.0.0:%s ...\n",port)
+  var port *string = flag.String("port","8888","Set port")
+  flag.Parse()
+  fmt.Printf("Starting qrcode server at http://0.0.0.0:%s ...\n",*port)
   http.HandleFunc("/", qrcodeHandler)
-  http.ListenAndServe(":" + port, nil)
+  http.ListenAndServe(":" + *port, nil)
 }
