@@ -26,6 +26,7 @@ func qrcodeHandler(w http.ResponseWriter, r *http.Request) {
       fmt.Fprintf(w,"bitly error: %s", err)
       return
     }
+    // to test decode: http://zxing.org/w/decode.jspx
     // fmt.Println(text)
   }
 
